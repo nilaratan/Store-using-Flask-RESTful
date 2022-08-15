@@ -6,6 +6,8 @@ from security import authenticate, identity
 from resources.user import User
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
+from db import db
+
 
 # creating flask app
 app = Flask(__name__)
@@ -40,6 +42,10 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
 
 
 # automatically creating the databases
+
+db.init_app(app)
+
+
 @app.before_first_request
 def create_all_db():
     db.create_all()
@@ -53,6 +59,4 @@ api.add_resource(User, "/register", "/users")
 api.add_resource(Store, "/store", "/store/<string:name>")
 api.add_resource(StoreList, "/stores")
 if __name__ == "__main__":
-    from db import db
-    db.init_app(app)
     app.run(port=5000, debug=True)
